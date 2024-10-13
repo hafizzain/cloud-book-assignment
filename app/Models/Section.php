@@ -15,5 +15,9 @@ class Section extends Model
     {
         return $this->belongsTo(Book::class);
     }
-    
+
+    public function subSections()
+    {
+        return $this->hasMany(SubSection::class, 'id', 'section_id');
+    } 
 }

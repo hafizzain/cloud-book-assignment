@@ -15,7 +15,7 @@ class BookController extends Controller
         $user = auth()->user();
         $cacheKey = 'books_user_{$user->id}';
         $books = Cache::remember($cacheKey, 60, function() use($user){
-            return Book::with('sections:id,title,content,book_id')->where('author_id', $user->id)
+            return Book::with('sections:id,title,content,book_id', 'subSections:id,title,content,book_id,section_id')->where('author_id', $user->id)
                      ->orWhereHas('collaborators', function($query) use($user){
                       $query->where('user_id', $user->id);
                      })->get();

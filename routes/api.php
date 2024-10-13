@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\SectionController;
+use App\Http\Controllers\SubSectionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -38,6 +39,11 @@ Route::middleware(['auth:sanctum', 'role:author'])->group(function (){
     Route::get('/sections/{book}', [SectionController::class, 'index']);
     Route::post('/sections', [SectionController::class, 'store']);
     Route::delete('/sections/{section}', [SectionController::class, 'destroy']);
+
+    // Sub Section Routes
+    Route::get('/sub_sections/{book}', [SubSectionController::class, 'index']);
+    Route::post('/sub_section', [SubSectionController::class, 'store']);
+    Route::delete('/sub_sections/{subsection}', [SubSectionController::class, 'destroy']);
 
     // Collaborator Routes
     Route::post('/books/{book}/collaborators', [BookController::class, 'addCollaborator']);

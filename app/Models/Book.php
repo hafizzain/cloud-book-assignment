@@ -16,6 +16,11 @@ class Book extends Model
     {
         return $this->hasMany(Section::class);
     }
+
+    public function subSections()
+    {
+        return $this->hasMany(SubSection::class);
+    }
     
     public function collaborators()
     {
