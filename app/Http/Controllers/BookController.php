@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class BookController extends Controller
 {
@@ -12,11 +13,13 @@ class BookController extends Controller
     public function index()
     {
         $user = auth()->user();
-
-        $books = Book::with('sections:id,title,content,book_id')->where('author_id', $user->id)
-                 ->orWhereHas('collaborators', function($query) use($user){
-                  $query->where('user_id', $user->id);
-                 })->get();
+        $cacheKey = 'books_user_{$user->id}';
+        $books = Cache::remember($cacheKey, 60, function() use($user){
+            return Book::with('sections:id,title,content,book_id')->where('author_id', $user->id)
+                     ->orWhereHas('collaborators', function($query) use($user){
+                      $query->where('user_id', $user->id);
+                     })->get();
+        });
 
         return response()->json(['message' => 'success', 'books' => $books, 'status' => 200],200);
 
@@ -70,7 +73,10 @@ class BookController extends Controller
 
     public function getAllCollaboratores()
     {
-        $collaborators = User::role('collaborator')->get(['id', 'name', 'email']);
+        $cacheKey = 'collaborators';
+        $collaborators = Cache::remember($cacheKey, 60, function(){
+            return User::role('collaborator')->get(['id', 'name', 'email']);
+        });
         return response()->json(['message' => 'success', 'collaborators' => $collaborators,  'status' => 200], 200);
     }
 

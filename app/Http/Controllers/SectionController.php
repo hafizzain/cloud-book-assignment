@@ -5,13 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\Section;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class SectionController extends Controller
 {
     // Get section for the specific book
     public function index(Book $book)
     {
-        return response()->json(['message' => 'success', 'sections' => $book->sections, 'status' => 200],200);
+        $cacheKey = 'section_book_{$book->id}';
+        $sections = Cache::remember($cacheKey, 60, function() use($book){
+            return $book->sections;
+        });
+        return response()->json(['message' => 'success', 'sections' => $sections, 'status' => 200],200);
     }
 
     // Create a new section
