@@ -28,13 +28,14 @@ Route::middleware(['auth:sanctum', 'role:author'])->group(function (){
 
     // Get Collaborators
     Route::get('collaborators', [BookController::class, 'getAllCollaboratores']);
-    
+
     // Book Routes
     Route::post('/books', [BookController::class, 'store']);
     Route::put('/books/{book}', [BookController::class, 'update']);
     Route::delete('/books/{book}', [BookController::class, 'destroy']);
 
     // Section Routes
+    Route::get('/sections/{book}', [SectionController::class, 'index']);
     Route::post('/sections', [SectionController::class, 'store']);
     Route::delete('/sections/{section}', [SectionController::class, 'destroy']);
 

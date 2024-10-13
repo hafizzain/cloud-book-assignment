@@ -21,4 +21,9 @@ class Book extends Model
     {
         return $this->belongsToMany(User::class, 'book_collaborators')->withPivot('permission');
     }
+
+    public function author()
+    {
+        return $this->belongsTo(User::class, 'author_id');
+    }
 }

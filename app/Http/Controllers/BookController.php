@@ -11,7 +11,13 @@ class BookController extends Controller
     // Get all books for authenticate user
     public function index()
     {
-        $books = auth()->user()->books;
+        $user = auth()->user();
+
+        $books = Book::with('sections:id,title,content,book_id')->where('author_id', $user->id)
+                 ->orWhereHas('collaborators', function($query) use($user){
+                  $query->where('user_id', $user->id);
+                 })->get();
+
         return response()->json(['message' => 'success', 'books' => $books, 'status' => 200],200);
 
     }
@@ -64,7 +70,7 @@ class BookController extends Controller
 
     public function getAllCollaboratores()
     {
-        $collaborators = User::collaborators();
+        $collaborators = User::role('collaborator')->get(['id', 'name', 'email']);
         return response()->json(['message' => 'success', 'collaborators' => $collaborators,  'status' => 200], 200);
     }
 

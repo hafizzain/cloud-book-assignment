@@ -52,8 +52,13 @@ class User extends Authenticatable
         return $this->hasMany(Book::class, 'author_id');
     }
 
+    public function collaboratedBooks()
+    {
+        return $this->belongsTo(Book::class, 'book_collaborators');
+    }
+
     public static function collaborators()
     {
-        return self::where('role', self::ROLE_COLLABORATOR)->get();
+        return self::where('name', self::ROLE_COLLABORATOR)->get();
     }
 }

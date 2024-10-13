@@ -8,6 +8,12 @@ use Illuminate\Http\Request;
 
 class SectionController extends Controller
 {
+    // Get section for the specific book
+    public function index(Book $book)
+    {
+        return response()->json(['message' => 'success', 'sections' => $book->sections, 'status' => 200],200);
+    }
+
     // Create a new section
     public function store(Request $request)
     {
@@ -41,7 +47,7 @@ class SectionController extends Controller
             'content' => 'required|string',
         ]);
 
-        if($section?->book?->author_id !== auth()->id())
+        if($section?->book?->author_id !== auth()->id() && !$section?->book->collaborators()->where('user_id', auth()->id())->exists())
         {
             return response()->json(['message' => 'unauthorized', 'status' => 403], 403);
         }
