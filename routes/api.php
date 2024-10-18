@@ -43,7 +43,7 @@ Route::middleware(['auth:sanctum', 'role:author'])->group(function (){
     // Sub Section Routes
     Route::get('/sub_sections/{book}', [SubSectionController::class, 'index']);
     Route::post('/sub_section', [SubSectionController::class, 'store']);
-    Route::delete('/sub_sections/{subsection}', [SubSectionController::class, 'destroy']);
+    Route::delete('/sub_sections/{subSection}', [SubSectionController::class, 'destroy']);
 
     // Collaborator Routes
     Route::post('/books/{book}/collaborators', [BookController::class, 'addCollaborator']);
@@ -57,6 +57,7 @@ Route::middleware(['auth:sanctum', 'role:author|collaborator'])->group(function 
     Route::get('/books', [BookController::class, 'index']);
     // Update section
     Route::put('/sections/{section}', [SectionController::class, 'update']);
+    Route::put('/sub_section/{subSection}', [SubSectionController::class, 'update']);
 });
 
 
