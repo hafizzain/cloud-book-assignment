@@ -22,4 +22,10 @@ class SubSection extends Model
     {
         return $this->hasMany(Subsection::class, 'parent_subsection_id')->with('childSubsections'); // Recursive
     }
+
+    // A subsection can belong to book
+    public function book()
+    {
+        return $this->hasOne(Book::class, 'id', 'book_id');
+    }
 }

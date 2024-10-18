@@ -58,7 +58,7 @@ class SubSectionController extends Controller
              'content' => 'required|string',
          ]);
  
-         if($subSection?->book?->author_id !== auth()->id() && !$subSection?->book->collaborators()->where('user_id', auth()->id())->exists())
+         if($subSection->book->author_id !== auth()->id() && !$subSection->book->collaborators()->where('user_id', auth()->id())->exists())
          {
              return response()->json(['message' => 'unauthorized', 'status' => 403], 403);
          }
@@ -71,7 +71,7 @@ class SubSectionController extends Controller
      // Delete a Sub section
      public function destroy(SubSection $subSection)
      {
-         if($subSection?->book?->author_id !== auth()->id())
+         if($subSection->book->author_id !== auth()->id())
          {
              return response()->json(['message' => 'unauthorized', 'status' => 403], 403);
          }

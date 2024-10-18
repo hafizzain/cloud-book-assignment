@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Sanctum\PersonalAccessToken;
 use Spatie\Permission\Models\Role;
 
 class AuthController extends Controller
@@ -26,7 +27,7 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-       $role = Role::where('name', $request->name)->first();
+       $role = Role::where('name', $request->role)->first();
        if($role)
        {
          $user->assignRole($role);
@@ -59,12 +60,18 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-       $request->user()->currentAcccessToken()->delete();
+        $accessToken = $request->bearerToken();
+        $token = PersonalAccessToken::findToken($accessToken);
+        
+        if (!empty($token)) {
+            $token = $token->delete();
+        }
+
        return response()->json(['message' => 'Logged out successfully.', 'status' => 200], 200);
     }
 
     public function me()
     {
-        return response()->json(['message' => 'success', 'user' => auth()->user(), 'status' => 200], 200);
+        return response()->json(['message' => 'success', 'user' => auth()->user(), 'role' => auth()->user()->roles->first()->name ?? 'No role assigned', 'status' => 200], 200);
     }
 }

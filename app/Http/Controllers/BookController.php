@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use App\Models\User;
+use FFI;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -15,7 +16,7 @@ class BookController extends Controller
         $user = auth()->user();
         $cacheKey = 'books_user_{$user->id}';
         $books = Cache::remember($cacheKey, 60, function() use($user){
-           return Book::with('sections.subsections.childSubsections')->where('author_id', $user->id)
+           return Book::with('sections.subsections.childSubsections', 'collaborators')->where('author_id', $user->id)
                      ->orWhereHas('collaborators', function($query) use($user){
                       $query->where('user_id', $user->id);
                      })->get();
